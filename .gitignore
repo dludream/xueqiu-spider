@@ -2,6 +2,7 @@
 
 # Logs
 data/
+*.bat
 logs
 _.log
 npm-debug.log_
