@@ -29,15 +29,28 @@ const mergeTimeline = (a: UserTimelineStatus[], b: UserTimelineStatus[]): UserTi
   return Array.from(map.values())
 }
 
+// 添加延时函数
+const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
+
+// 生成随机延时时间（3-10秒之间）
+const getRandomDelay = () => Math.floor(Math.random() * (10000 - 3000 + 1) + 3000)
+
 try {
   const api = new XueqiuApi()
   await api.init()
+  
   for (const account of accounts) {
-    const timelineRes = await api.fetchUserTimeline(account.id, account.timestamp, account.md5)
+    // 添加随机延时
+    const delay = getRandomDelay()
+    console.log(`等待 ${delay/1000} 秒后继续...`)
+    await sleep(delay)
+    
+    const timelineRes = await api.fetchUserTimeline(account.id, Number(account.timestamp), account.md5)
     const oldTimeline = await loadExistingTimeline(account.id)
     const timeline = mergeTimeline(timelineRes.statuses, oldTimeline)
     await saveTimeline(account.id, timeline)
   }
+  
   await api.dispose()
 } catch (err) {
   console.error(err)

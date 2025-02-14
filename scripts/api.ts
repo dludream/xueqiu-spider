@@ -107,7 +107,6 @@ export default class XueqiuApi {
     const logEntry = {
       timestamp: requestTime,
       url: url,
-      response: json
     }
     
     fs.writeFileSync(
