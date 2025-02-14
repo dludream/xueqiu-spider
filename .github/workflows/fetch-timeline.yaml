@@ -33,6 +33,6 @@ jobs:
 
       - name: Commit and push changes
         run: |
-          git add .
-          git commit -m "chore: fetch timeline [skip ci]" || exit 0
+          git add data/
+          git commit -m "chore: fetch timeline and logs [skip ci]" || exit 0
           git push

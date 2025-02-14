@@ -69,11 +69,14 @@ export default class XueqiuApi {
   }
 
   async fetchJson<T>(url: string) {
+    console.log(`Fetching URL: ${url}`)
     const res = await this.page.goto(url)
     if (!res) {
       throw new Error(`Failed to fetch json from ${url}`)
     }
-    return JSON.parse(await res.text()) as T
+    const text = await res.text()
+    console.log(`Response: ${text}`)
+    return JSON.parse(text) as T
   }
 
   async searchUser(query: string) {
@@ -90,7 +93,28 @@ export default class XueqiuApi {
     
     const url = `https://xueqiu.com/v4/statuses/user_timeline.json?${params.toString()}&md5__1038=${md5}`
     
+    // 记录请求时间
+    const requestTime = new Date().toISOString()
     const json = await this.fetchJson<UserTimelineRes>(url)
+    
+    // 将日志写入文件
+    const fs = require('fs')
+    const logDir = './data/logs'
+    if (!fs.existsSync(logDir)){
+        fs.mkdirSync(logDir, { recursive: true })
+    }
+    
+    const logEntry = {
+      timestamp: requestTime,
+      url: url,
+      response: json
+    }
+    
+    fs.writeFileSync(
+      `${logDir}/timeline-${requestTime.replace(/[:.]/g, '-')}.json`,
+      JSON.stringify(logEntry, null, 2)
+    )
+    
     return json
   }
 }
