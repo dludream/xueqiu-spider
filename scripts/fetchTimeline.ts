@@ -33,7 +33,7 @@ try {
   const api = new XueqiuApi()
   await api.init()
   for (const account of accounts) {
-    const timelineRes = await api.fetchUserTimeline(account.id)
+    const timelineRes = await api.fetchUserTimeline(account.id, account.timestamp, account.md5)
     const oldTimeline = await loadExistingTimeline(account.id)
     const timeline = mergeTimeline(timelineRes.statuses, oldTimeline)
     await saveTimeline(account.id, timeline)
