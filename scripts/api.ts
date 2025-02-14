@@ -1,7 +1,6 @@
 import type { Browser, Page } from 'puppeteer'
 import puppeteer from 'puppeteer'
 import type { SearchUserRes, UserTimelineRes } from './api.types'
-import accounts from '../dev-accounts.json' with { type: 'json' }
 
 const getProxy = () => {
   if (!process.env.HTTP_PROXY) {
@@ -82,8 +81,16 @@ export default class XueqiuApi {
     return json
   }
 
-  async fetchUserTimeline(userId: number, timestamp: string, md5: string) {
-    const json = await this.fetchJson<UserTimelineRes>(`https://xueqiu.com/v4/statuses/user_timeline.json?page=1&user_id=${userId}&_=${timestamp}&md5__1038=${md5}`)
+  async fetchUserTimeline(userId: number, timestamp: number, md5: string) {
+    const params = new URLSearchParams({
+      page: '1',
+      user_id: userId.toString(),
+      _: timestamp.toString(),
+    })
+    
+    const url = `https://xueqiu.com/v4/statuses/user_timeline.json?${params.toString()}&md5__1038=${md5}`
+    
+    const json = await this.fetchJson<UserTimelineRes>(url)
     return json
   }
 }
