@@ -70,6 +70,7 @@ export default class XueqiuApi {
 
   async fetchJson<T>(url: string) {
     console.log(`Fetching URL: ${url}`)
+    console.log(`Proxy: ${getProxy()}`)
     const res = await this.page.goto(url)
     if (!res) {
       throw new Error(`Failed to fetch json from ${url}`)
